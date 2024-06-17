@@ -38,6 +38,10 @@ const Index = () => {
       }
 
       const blob = await response.blob();
+      if (blob.type !== "video/mp4") {
+        throw new Error("Processed file is not a valid MP4 video");
+      }
+
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.style.display = "none";
