@@ -38,15 +38,18 @@ const Index = () => {
       }
 
       const blob = await response.blob();
-      if (blob.type !== "video/mp4") {
-        throw new Error("Processed file is not a valid MP4 video");
-      }
-
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.style.display = "none";
       a.href = url;
       a.download = "output.mp4";
+
+      // Validate the blob type before downloading
+      if (blob.type !== "video/mp4") {
+        console.error("Processed file is not a valid MP4 video. Blob type:", blob.type);
+        throw new Error("Processed file is not a valid MP4 video");
+      }
+
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
