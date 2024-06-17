@@ -18,16 +18,25 @@ const Index = () => {
   };
 
   const handleRender = async () => {
+    if (!video || !logo) {
+      console.error("Video or logo file is missing");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("video", video);
     formData.append("logo", logo);
 
-    const response = await fetch("/upload", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const response = await fetch("/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (response.ok) {
+      if (!response.ok) {
+        throw new Error("Error processing video");
+      }
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -37,8 +46,8 @@ const Index = () => {
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
-    } else {
-      console.error("Error processing video");
+    } catch (error) {
+      console.error("Error processing video:", error);
     }
   };
 
